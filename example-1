@@ -1,0 +1,133 @@
+C# Polymorphism Nedir?
+C# Polymorphism, nesne yönelimli programlamanın temel yapı taşlarının arasında yer alan, çok biçimlilik olarak bilinen bir kavramdır.
+bir nesne yapısının birbirinden farklı nesneler şeklinde davranmasını sağlayan yapıdır.
+
+
+C# Polymorphism Avantajları
+Projelerimizde kurmuş olduğumuz yapılara esneklik sağlar ve farklı yapıdaki işlemler ile arasındaki bağlantı ilişkilerini azaltarak daha güvenli bir hale getirir.
+Kod yapımızın tekrarlayan bir şekilde yazılmasının minimum seviyeye indirerek projelerimizin okunabilirlik oranında artış sağlamasına yardımcı olur.
+Polymorphism yapısı kullandığımız projelerimizde almış olduğumuz hatayı tek bir yapı içerisinde çözüme ulaştırma kolaylığı bulunur.
+
+
+C# Polymorphism Örnekleri
+Programlama dillerinde yazmış olduğumuz kodun sorunsuz bir şekilde çalışması için önce kodun derlenmesi gerekmektedir. Derleme işlemi genel bir çatı olsa da işleyiş bakımından C++ üzerinde farklı, Java dilinde farklı bir şekilde arka plana sahiptir.
+Bir ulaşım aracını düşündüğümüz zaman o aracın hareket edebilmesini sürmek eylemi ile ifade etmemize rağmen otomobil için farklı, bisiklet için farklı bir anlam ifade etmektedir.
+Son olarak bir öğrencinin okuduğu okuldan mezun olma koşulu vardır. Fakat bir üniversite öğrencisinin mezuniyeti için gereken koşullar ile bir lise öğrencisinin mezun olması için gerek duyduğu gereksinimlerin farklı olması.
+
+/*ÖRNEK*/
+basit bir polymorphism örneği olan hayvanlar yapısını ele alarak çok biçimlilik kavramında ilk adımımızı atalım.
+
+Öncelikle hayvan yapılarının genel yönetimini gerçekleştireceğim “Animal” isminde bir sınıf oluşturarak içerisinde gizli olarak tutmak istediğim bazı veriler için değişkenler tanımladım.
+Tanımlamamdan sonra programım içerisinde bu sınıf yapımı polymorphism yapısında kullanmama kolaylık sağlayacak basit bir kaç constructor metot yapısı tanımlayarak kendime bir kolaylık sağladım.(Böylelikle programımı da esnek bir hale sokmuş oldum)
+Uygulamış olduğum bu iki aşamadan sonra ilk adımım olan “Animal” sınıf yapımın içeriği aşağıdaki halini almış oldu.
+namespace PolymorphismApp
+{
+    class Animal
+    {
+        ///---> Değişken Tanımlamaları <---\\\
+        protected string name, sound, info, mark = new string ('-',6);
+
+        public string getInfo
+        {
+            get { return info; }
+        }
+        
+        ///---> Constructor Metot Tanımlamaları <---\\\
+        public Animal()
+        {
+            this.name = null;
+            this.sound = null;
+            this.info = null;
+        }
+        public Animal (String name, String sound)
+        {
+            this.name = name;
+            this.sound = sound;
+            this.info = null;
+        }
+
+        public Animal (String name, String sound, String info)
+        {
+            this.name = name;
+            this.sound = sound;
+            this.info = info;
+        }
+
+        ///---> Metot Tanımlaması <---\\\
+        public void infoText()
+        {
+            Console.WriteLine("{0}\n < Hayvan Kimliği >\n{1}\n-> Türüm: {2}\n-> İsmim: {3}\n-> Çıkardığım Ses: {4}\n{5}",mark,mark, info,name,sound,mark);
+        }
+    }
+}
+
+Üst şablon sınıfımı oluşturduğumuza göre artık bu sınıftan türeyecek alt hayvan grupları için yeni sınıflar oluşturabiliriz. Bunun için “Dog” isminde bir sınıf oluşturdum.
+Bu sınıf yapısı içerisinde üst sınıfta bulunan constructor yapılarını ve metotları override ederek yeni bir tanımlama oluşturdum.
+Bu tanımlama işlemlerimden sonra “Dog” sınıfımın içeriği aşağıdaki halini almış oldu.
+
+namespace PolymorphismApp
+{
+    class Dog : Animal
+    {
+        public Dog(String name)
+        {
+            this.name = name;
+            this.sound = "Hav Hav";
+            this.info = "Köpek";
+        }
+        public Dog (String name, String info)
+        {
+            this.name = name;
+            this.info = info;
+            this.sound = "Hav Hav";
+        }
+    }
+}
+Farkı daha iyi gözlemleyebilmek adına bir alt hayvan sınıfı daha oluşturarak bu yapıma “Cat” ismini verdim.
+Daha sonra “Dog” sınıfında olduğu gibi yapımın özelliklerini değiştirecek yeni tanımlamalar oluşturdum.
+namespace PolymorphismApp
+{
+    class Cat : Animal
+    {
+        public Cat(String name)
+        {
+            this.name = name;
+            this.sound = "Miyav Miyav";
+            this.info = "Kedi";
+        }
+        public Cat (String name, String info)
+        {
+            this.name = name;
+            this.sound = "Miyav Miyav";
+            this.info = info;
+        }
+    }
+}
+Tüm bu işlemler sonucunda polymorphism yapısının sonuçlarını gözlemlemek için “Main” sınıf yapıma giderek bazı tanımlamalar gerçekleştirdim.
+namespace PolymorphismApp
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            ///---> Gerekli Tanımlamalar <---\\\
+            Animal dog = new Dog("Zaar","Kangal");
+            Animal cat = new Cat("Mutlu", "Tekir");
+            ///---> Ekran Çıktılarına Bakalım <---\\\
+            dog.infoText();
+            Console.WriteLine("");
+            cat.infoText(); 
+        }
+    }
+}
+Kod Çıktısı:
+
+<Hayvan Kimliği>
+->Türüm:Kangal
+->İsmim:Zaar
+->Çıkardığım Ses: Hav Hav
+------------------------
+<Hayvan Kimliği>
+->Türüm:Tekir
+->İsmim:Mutlu
+->Çıkardığım Ses: Miyav
