@@ -1,0 +1,133 @@
+Regular expression bir metni düzenlemek yada metin içerisinden belli kurallara uyan alt metinler elde etmek için kullandığımız bir dildir. Bir regular expression, string tipindeki karakter topluluğuna uygulanır. Sonuç olarak substringler oluşur yada orjinal metnin bir kısmını içeren değiştirilmiş yeni metinler elde edilir.
+Regular Expression’larda Kullanılan Özel Karakterler ve Etkileri
+1.)  “.” Karakteri
+Tek bir karakteri temsil eder(yeni satır karakteri hariç).
+“CSharp.edir” şeklindeki bir desen CSharpnedir, CSharpNedir, CSharpSedir, CSharp3edir gibi stringleri döndürebilir.
+
+2.)  “[]” Karakterleri
+Bir arrayi yada aralığı temsil eder.
+“CSharp[SNY]edir” deseni, CSharpSedir, CSharpNedir ve CSharpYedir stringlerini döndürür.
+“CSharp[a-z]edir” şeklindeki kullanım aralık belirtmeye yarar.
+“CSharp[0-9]edir” şeklindeki kılanlım ise sayısal aralık belirtmeye yarar.
+
+3.)  “?” Karakteri
+Kendinden önceki karakterin stringte olması yada olmamasını sağlar.
+“CSharpn?edir” deseni CSharpedir yada CSharpnedir döndürür.
+
+4.)  “\” Karakteri
+Kendinden sonraki özel karakterin stringe dahil edilmesini sağlar.
+“CSharpnedir\?” deseni CSharpnedir? Stringini döndürür. (Eğer “\” karakterini kullanmamış olsaydık CSharpnedi yada CSharpnedir dönerdi.)
+
+5.)  “*” Karakteri
+Kendinden önceki karakterin yada stringin hiç olmaması yada istediği sayıda olmasını sağlar.
+“CSharpnedir*” deseni, CSharpnedi, CSharpnedir, CSharpnedirr, CSharpnedirrr, ... döndürür. “CSharp(nedir)*” deseni ise CSharp, CSharpnedir, CSharpnedirnedir, ... döndürür.
+
+6.)  “{}” Karakterleri
+Kendinden önce gelen karakterin belirtilen sayıda tekrar etmesini sağlar.
+“C{4}Sharpnedir” deseni, CCCCSharpnedir stringini döndürür.
+
+7.)  “^” Karakteri
+Satır başını ifade eder.
+“^CSharpnedir” deseni, satır başında “CSharpnedir” stringi varsa bunu döndürür.
+
+8.)  “$” Karakteri
+Satır sonunu ifade eder.
+“CSharpnedir$” deseni, satır sonunda “CSharpnedir” stringi varsa bunu döndürür.
+
+Basit Bir Tarih Deseni Yapalım
+Şimdi işin pratiğine gelelim ve adım adım tarih deseni oluşturalım. Daha sonra ise oluşturduğumuz bu tarih desenini bir konsol programında kullanalım.
+
+Tarih desenimiz bir string içerisindeki, GG/AA/YYYY formatlarındaki tarihleri yakalayacak yapıda olsun.
+
+Önce desenimizin GG yani tarihin gün belirtilen kısmını tanımlayalım :
+
+“(0?[1-9])”
+// 1, 2, .., 9, 01, 02, ..., 09 gibi yazılmış günleri tanımlar.
+
+“([12][0-9])”
+// 10, 11, ..., 29 gibi yazılmış günleri tanımlar.
+
+“(3[01])”
+// 30, 31 günlerini tanımlar.
+
+// Bu üç tanımı OR (|) işlemiyle
+// birleştirirsek gün tanımını elde ederiz.
+
+// Gün tanımı :
+“((0?[1-9])|([12][0-9])|(3[01]))”
+
+
+
+Şimdi desenimizin AA yani tarihin ay belirtilen kısmını tanımlayalım :
+
+“(0?[1-9])”
+// 1, 2, .., 9, 01, 02, .., 09 gibi yazılmış ayları tanımlar.
+
+“(1[0-2])”
+// 10, 11, 12 aylarını tanımlar.
+
+// Bu iki tanımı OR işlemiyle
+// birleştirirsek ay tanımını elde ederiz.
+
+// Ay Tanımı :
+“((0?[1-9])|(1[0-2]))”
+
+
+
+Şimdi desenimizin YYYY yani tarihin yıl belirtilen kısmını tanımlayalım :
+
+“([12][0-9][0-9][0-9])”
+//1000 ile 2999 yılları arasındaki tüm yılları içerir.
+
+
+
+Ve son olarak tanımladığımız gün, ay ve yıl desenlerini “/” ile birleştirelim :
+
+“((0?[1-9])|([12][0-9])|(3[01]))(/)(0?[1-9]|1[0-2])(/)([12][0-9][0-9][0-9]))”
+
+/*ÖRNEK*/
+
+class Test
+
+{
+
+      public static void Main()
+
+      {
+
+            // Regular Expression için bir desen (pattern) tanımlıyoruz :
+
+            string tarihDeseni=@"(?((0?[1-9])|([12][0-9])|(3[01]))(/)(0?[1-9]|1[0-2])(/)([12][0-9][0-9][0-9]))";
+
+            // Regular Expressionumuzu tanımlıyoruz :
+
+            Regex benimRegex=new Regex(tarihDeseni);
+
+            // Kullanıcıdan tarih içeren metni talep ediyoruz :
+
+            Console.WriteLine("Lütfen içinde tarih olan bir metin giriniz :");
+
+            // Tarih arayacağımız metni konsoldan alıyoruz :
+
+            string metin=Console.ReadLine();
+
+            // Metin içerisindeki tarihleri (birden fazla olabilir) Collection nesnesine atıyoruz :
+
+            MatchCollection benimMatchCollection=benimRegex.Matches(metin);
+
+            // Metin içindeki herbir tarihi ekrana yazdırıyoruz :
+
+            foreach(Match benimMatch in benimMatchCollection)
+
+            {
+
+                  Console.WriteLine(benimMatch.Groups["tarih"]);
+
+            }
+
+            Console.Read();
+
+      }
+
+}
+
